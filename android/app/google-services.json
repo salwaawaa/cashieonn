@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "381057906637",
+    "project_id": "cashieon-95149",
+    "storage_bucket": "cashieon-95149.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381057906637:android:27711b6b9611e00661f684",
+        "android_client_info": {
+          "package_name": "com.example.cashieonn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXHXZIDzls99RzFqDURtKuFrigXHEjHng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
