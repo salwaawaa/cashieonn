@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditMember extends StatefulWidget {
+  final DocumentSnapshot<Map<String, dynamic>> document;
   final String documentId;
 
-  const EditMember({Key? key, required this.documentId}) : super(key: key);
+  const EditMember({
+    Key? key,
+    required this.document,
+    required this.documentId,
+  }) : super(key: key);
 
   @override
   _EditMemberState createState() => _EditMemberState();
 }
 
 class _EditMemberState extends State<EditMember> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _teleponController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController teleponController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _fetchMemberData();
+
+    final data = widget.document.data() as Map<String, dynamic>;
+
+    nameController.text = data['name'];
+    teleponController.text = data['telepon'];
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _teleponController.dispose();
+    nameController.dispose();
+    teleponController.dispose();
     super.dispose();
   }
 
@@ -32,49 +40,105 @@ class _EditMemberState extends State<EditMember> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Member"),
+        title: Text('Edit Petugas'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(30),
         child: ListView(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  'Nama Member',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Masukkan nama member',
+                const Text(
+                  'Nama Petugas',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
                   ),
                 ),
-                SizedBox(height: 15),
-                Text(
-                  'Telepon',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: _teleponController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Masukkan telepon',
+                const SizedBox(height: 7),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color.fromRGBO(255, 255, 255, 1),
+                    border: Border.all(color: Colors.grey, width: 1.0),
                   ),
-                ),
+                  child: TextField(
+                    controller: nameController,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Masukkan nama petugas',
+                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                    ),
+                  ),
+                )
               ],
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _updateDataToFirestore(widget.documentId);
-                Navigator.pop(context);
-              },
-              child: Text('Simpan'),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'Kata Sandi',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 7),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color.fromRGBO(255, 255, 255, 1),
+                border: Border.all(color: Colors.grey, width: 1.0),
+              ),
+              child: TextField(
+                controller: teleponController,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Masukkan kata sandi',
+                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              width: 400,
+              height: 55,
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF137DA8),
+                ),
+                onPressed: () {
+                  updatePetugasData();
+                  Navigator.pushNamed(context, '/member');
+                },
+                child: const Text(
+                  'Simpan',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -82,43 +146,27 @@ class _EditMemberState extends State<EditMember> {
     );
   }
 
-  Future<void> _fetchMemberData() async {
+  void updatePetugasData() async {
     try {
-      // Retrieve data for the given document ID
-      final snapshot = await FirebaseFirestore.instance
-          .collection('member')
-          .doc(widget.documentId)
-          .get();
+      String name = nameController.text;
+      String telepon = teleponController.text;
 
-      // Update text controllers with fetched data
-      if (snapshot.exists) {
-        final data = snapshot.data() as Map<String, dynamic>;
-        _nameController.text = data['name'] ?? '';
-        _teleponController.text = data['telepon'] ?? '';
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching member data: $e');
-      }
-    }
-  }
-
-  Future<void> _updateDataToFirestore(String documentId) async {
-    try {
-      // Update data in Firestore with the specified document ID
       await FirebaseFirestore.instance
           .collection('member')
-          .doc(documentId)
+          .doc(widget.document.id)
           .update({
-        'name': _nameController.text,
-        'telepon': _teleponController.text,
-        // Add other fields as needed
+        'name': name,
+        'telepon': telepon,
       });
-    } catch (e) {
-      // Handle any potential errors here
-      if (kDebugMode) {
-        print('Error updating data in Firestore: $e');
-      }
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Data berhasil diperbarui')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal memperbarui data: $error')),
+      );
     }
   }
 }

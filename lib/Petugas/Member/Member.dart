@@ -1,3 +1,4 @@
+import 'package:cashieonn/Petugas/Member/Edit_Member.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -87,7 +88,7 @@ class Member extends StatelessWidget {
                       ),
                       child: ListTile(
                         title: Text(
-                          name.toString(),
+                          'nama: $name',
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -95,7 +96,7 @@ class Member extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text(
-                          telepon.toString(),
+                          'Telepon: $telepon',
                           style: const TextStyle(
                             fontSize: 16,
                           ),
@@ -133,12 +134,19 @@ class Member extends StatelessWidget {
                               },
                               icon: const Icon(Icons.delete),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/edit_member',
-                                    arguments: documentId);
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => EditMember(
+                                      document: docs,
+                                      documentId: documentId,
+                                    ),
+                                  ),
+                                );
                               },
-                              icon: const Icon(Icons.edit),
+                              child: Icon(Icons.edit),
                             ),
                           ],
                         ),

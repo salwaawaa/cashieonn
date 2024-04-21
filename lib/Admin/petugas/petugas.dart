@@ -93,7 +93,7 @@ class Data_Petugas extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              name.toString(),
+                              'email: $name',
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -103,7 +103,7 @@ class Data_Petugas extends StatelessWidget {
                           ],
                         ),
                         subtitle: Text(
-                          kataSandi.toString(),
+                          'kata sandi: $kataSandi',
                           style: const TextStyle(
                             fontSize: 16,
                           ),

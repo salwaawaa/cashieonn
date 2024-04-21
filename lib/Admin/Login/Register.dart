@@ -108,7 +108,7 @@ class Register extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 15),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: const Color(0xFF137DA8),
+                      backgroundColor: const Color(0xFF137DA8),
                     ),
                     onPressed: () {
                       _signUp(_email, _password);

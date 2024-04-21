@@ -9,8 +9,8 @@ import 'package:cashieonn/Petugas/Member/Member.dart';
 import 'package:cashieonn/Petugas/Member/Tambah_Member.dart';
 import 'package:cashieonn/Petugas/Menu/Homescreen.dart';
 import 'package:cashieonn/Petugas/Menu/Lihat_Barang.dart';
-import 'package:cashieonn/Petugas/Menu/Lihat_Member.dart';
 import 'package:cashieonn/Petugas/Transaksi/Transaksi.dart';
+import 'Petugas/Menu/Lihat_Member.dart';
 import 'package:cashieonn/Petugas/splash/Login.dart';
 import 'package:cashieonn/Petugas/splash/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'Cashieon',
       theme: ThemeData(fontFamily: 'poppins'),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/tambah_petugas',
+      initialRoute: '/transaksi',
       routes: {
         // Petugas
         '/splash': (context) => const Splashscreen(),
@@ -52,15 +52,13 @@ class MyApp extends StatelessWidget {
         '/data_barang': (context) => const Data_Barang(),
         '/tambah_barang': (context) => const Tambah_Barang(),
 
+        // yang gaada route
+        //edit petugas,edit barang, edit member
+
         //struk
         // transaksi
-        //riwayat klik transaksi
-        //edit petugas
-        //edit barang
-        //edit member
+        //riwayat klik transaksi 
       },
     );
   }
 }
-
-class Edit_Member {}

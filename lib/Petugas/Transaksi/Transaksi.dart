@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Transaksi extends StatefulWidget {
   @override
@@ -6,25 +7,56 @@ class Transaksi extends StatefulWidget {
 }
 
 class _TransaksiState extends State<Transaksi> {
-  String _selectedItem = 'Barang 1'; // Barang default yang dipilih
+  String _selectedItem = ''; // Barang default yang dipilih
   int _quantity = 1;
-
-  // Daftar nama barang
-  List<String> _barangList = ['Barang 1', 'Barang 2', 'Barang 3', 'Barang 4'];
-
-  // List untuk menyimpan transaksi
-  List<Map<String, dynamic>> _transaksiList = [];
-
-  String _selectedMember = 'Member 1'; // Member default yang dipilih
-  List<String> _memberList = [
-    'Member 1',
-    'Member 2',
-    'Member 3',
-    'Member 4',
-    'Member 5'
-  ];
-
+  List<String> _barangList = []; // Daftar nama barang
+  List<Map<String, dynamic>> _transaksiList =
+      []; // List untuk menyimpan transaksi
+  String _selectedMember = ''; // Member default yang dipilih
+  List<String> _memberList = []; // Daftar nama member
   bool _isNonMemberSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBarangList();
+    _fetchMemberList();
+  }
+
+  Future<void> _fetchBarangList() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('data_barang').get();
+      List<String> barangList = [];
+      querySnapshot.docs.forEach((doc) {
+        barangList.add(doc['nama_barang']);
+      });
+      setState(() {
+        _barangList = barangList;
+        _selectedItem = barangList.isNotEmpty ? barangList[0] : '';
+      });
+    } catch (e) {
+      print('Error fetching barang: $e');
+    }
+  }
+  
+
+  Future<void> _fetchMemberList() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('member').get();
+      List<String> memberList = [];
+      querySnapshot.docs.forEach((doc) {
+        memberList.add(doc['name']);
+      });
+      setState(() {
+        _memberList = memberList;
+        _selectedMember = memberList.isNotEmpty ? memberList[0] : '';
+      });
+    } catch (e) {
+      print('Error fetching member: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +65,6 @@ class _TransaksiState extends State<Transaksi> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            // Tambahkan logika untuk kembali ke layar sebelumnya
             Navigator.pop(context);
           },
         ),
@@ -48,7 +79,7 @@ class _TransaksiState extends State<Transaksi> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(color: Color(0xFF137DA8)),
+                  borderSide: BorderSide(color: const Color(0xFF137DA8)),
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
@@ -87,7 +118,10 @@ class _TransaksiState extends State<Transaksi> {
                           }
                         });
                       },
-                      child: Icon(Icons.remove, color: Color(0xFF137DA8)),
+                      child: Icon(
+                        Icons.remove,
+                        color: const Color(0xFF137DA8),
+                      ),
                     ),
                     SizedBox(width: 10),
                     Text('$_quantity'),
@@ -100,7 +134,7 @@ class _TransaksiState extends State<Transaksi> {
                       },
                       child: Icon(
                         Icons.add,
-                        color: Color(0xFF137DA8),
+                        color: const Color(0xFF137DA8),
                       ),
                     ),
                   ],
@@ -116,12 +150,12 @@ class _TransaksiState extends State<Transaksi> {
                   'jumlah': _quantity,
                 });
                 // Reset pilihan barang dan jumlah
-                _selectedItem = 'Barang 1';
+                _selectedItem = _barangList.isNotEmpty ? _barangList[0] : '';
                 _quantity = 1;
                 setState(() {});
               },
               style: TextButton.styleFrom(
-                backgroundColor: Color(0xFF137DA8),
+                backgroundColor: const Color(0xFF137DA8),
                 minimumSize: Size(500, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -238,13 +272,8 @@ class _TransaksiState extends State<Transaksi> {
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    // Atur radius di sini
-                                    // Di sini Anda bisa mengatur sisi-sisi lain jika diperlukan
                                   ),
                                 ),
-                                //   side: MaterialStateProperty.all<BorderSide>(
-                                //   BorderSide(color: Colors.green), // Atur warna border di sini
-                                // ),
                               ),
                             ),
                           ),
@@ -270,21 +299,15 @@ class _TransaksiState extends State<Transaksi> {
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    // Atur radius di sini
-                                    // Di sini Anda bisa mengatur sisi-sisi lain jika diperlukan
                                   ),
                                 ),
-                                // side: MaterialStateProperty.all<BorderSide>(
-                                //   BorderSide(color: Colors.green),
-                                // ),
                                 minimumSize: MaterialStateProperty.all<Size>(
-                                  Size(double.infinity,
-                                      55), // Atur ketinggian button di sini
+                                  Size(double.infinity, 55),
                                 ),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                   _isNonMemberSelected
-                                      ? Color(0xFF137DA8)
+                                      ? const Color(0xFF137DA8)
                                       : Colors.transparent,
                                 ),
                               ),
@@ -305,8 +328,6 @@ class _TransaksiState extends State<Transaksi> {
                                 labelText: 'Tunai',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  // borderSide: BorderSide(color: Colors.green),
-                                  // Atur radius di sini
                                 ),
                               ),
                             ),
@@ -323,7 +344,6 @@ class _TransaksiState extends State<Transaksi> {
                                   labelText: 'Kembalian',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    // borderSide: BorderSide(color: Colors.green),
                                   ),
                                 ),
                               ),
@@ -346,7 +366,7 @@ class _TransaksiState extends State<Transaksi> {
                       // Misalnya, simpan ke database atau lakukan operasi lainnya
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Color(0xFF137DA8),
+                      backgroundColor: const Color(0xFF137DA8),
                       minimumSize: Size(500, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

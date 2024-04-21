@@ -13,7 +13,7 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     super.initState();
-    // Timer 3 detik
+
     Timer(const Duration(seconds: 10), () {
       Navigator.pushReplacement(
         context,

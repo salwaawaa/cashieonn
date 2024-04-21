@@ -14,23 +14,22 @@ class Edit_Petugas extends StatefulWidget {
 }
 
 class _EditPetugasState extends State<Edit_Petugas> {
-  TextEditingController namaController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController kata_sandiController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with existing data
+
     final data = widget.document.data() as Map<String, dynamic>;
 
-    namaController.text = data['nama'];
+    nameController.text = data['name'];
     kata_sandiController.text = data['kata_sandi'];
   }
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
-    namaController.dispose();
+    nameController.dispose();
     kata_sandiController.dispose();
     super.dispose();
   }
@@ -49,7 +48,7 @@ class _EditPetugasState extends State<Edit_Petugas> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'nama Petugas',
                   style: TextStyle(
                     fontSize: 14,
@@ -66,14 +65,14 @@ class _EditPetugasState extends State<Edit_Petugas> {
                     border: Border.all(color: Colors.grey, width: 1.0),
                   ),
                   child: TextField(
-                    controller: namaController,
-                    style: TextStyle(
+                    controller: nameController,
+                    style: const TextStyle(
                       fontSize: 14,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'masukkan nama petugas',
+                      hintText: 'masukkan kata email',
                       hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 17),
@@ -85,7 +84,7 @@ class _EditPetugasState extends State<Edit_Petugas> {
             const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               'kata sandi',
               style: TextStyle(
                 fontSize: 14,
@@ -103,11 +102,11 @@ class _EditPetugasState extends State<Edit_Petugas> {
               ),
               child: TextField(
                 controller: kata_sandiController,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black,
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'masukkan kata sandi',
                   hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
@@ -116,19 +115,20 @@ class _EditPetugasState extends State<Edit_Petugas> {
                 ),
               ),
             ),
+            const SizedBox(height: 450),
             Container(
               width: 400,
               height: 55,
               margin: EdgeInsets.symmetric(horizontal: 15),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 234, 90, 5),
+                  backgroundColor: Color(0xFF137DA8),
                 ),
                 onPressed: () {
-                  // Call the function to update data in Firestore
+                  
                   updatePetugasData();
                 },
-                child: Text(
+                child: const Text(
                   'Simpan',
                   style: TextStyle(
                     fontSize: 14,
@@ -148,7 +148,7 @@ class _EditPetugasState extends State<Edit_Petugas> {
   void updatePetugasData() async {
     try {
       // Get the data from the text fields
-      String nama = namaController.text;
+      String name = nameController.text;
       String kata_sandi = kata_sandiController.text;
 
       // Update the data in Firestore
@@ -156,7 +156,7 @@ class _EditPetugasState extends State<Edit_Petugas> {
           .collection('petugass')
           .doc(widget.document.id) // Use document ID from widget
           .update({
-        'nama': nama,
+        'name': name,
         'kata_sandi': kata_sandi,
         // Add other fields as needed
       });
@@ -169,7 +169,7 @@ class _EditPetugasState extends State<Edit_Petugas> {
       // Show a snackbar or dialog to indicate the error to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to update data. Please try again.'),
+          content: Text('Gagal memperbarui data. Silakan coba lagi.'),
         ),
       );
     }

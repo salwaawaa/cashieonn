@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cashieonn/Petugas/Menu/Homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,12 +29,10 @@ class _LoginState extends State<Login> {
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) =>
-                Homescreen(), // Replace with your destination screen
+            builder: (context) => Homescreen(),
           ),
         );
       } else {
-        // Handle empty email or password error
         showDialog(
           context: context,
           builder: (context) {
@@ -52,8 +52,6 @@ class _LoginState extends State<Login> {
         );
       }
     } catch (e) {
-      // Handle login failure
-      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) {
@@ -151,7 +149,6 @@ class _LoginState extends State<Login> {
             ),
             InkWell(
               onTap: () {
-                // Implement your login logic here
                 _signInWithEmailAndPassword(context);
               },
               child: const SizedBox(

@@ -1,3 +1,4 @@
+import 'package:cashieonn/Admin/Home/Data_Barang/Edit_barang.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -98,19 +99,12 @@ class Data_Barang extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              jumlah.toString(),
+                              'Rp: $harga\njumlah: $jumlah',
                               style: const TextStyle(
-                                fontSize: 17,
-                                
+                                fontSize: 16,
                               ),
                             ),
                           ],
-                        ),
-                        subtitle: Text(
-                          harga.toString(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -146,12 +140,19 @@ class Data_Barang extends StatelessWidget {
                               },
                               icon: const Icon(Icons.delete),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/edit_barang',
-                                    arguments: documentId);
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => EditBarang(
+                                      document: docs,
+                                      documentId: documentId,
+                                    ),
+                                  ),
+                                );
                               },
-                              icon: const Icon(Icons.edit),
+                              child: Icon(Icons.edit),
                             ),
                           ],
                         ),

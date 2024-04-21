@@ -172,7 +172,7 @@ class _HomescreenState extends State<Homescreen> {
                   ),
                   child: const Center(
                     child: Text(
-                      'Member',
+                      ' Member',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
